@@ -3,13 +3,39 @@
 }
 
 <style>
-   footer{
-   display: none;
-   }
+    footer {
+        display: none;
+    }
 
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+        position: relative;
+    }
+
+    .text-center {
+        padding-top: 20px;
+    }
+
+    .icon-middle-left {
+        position: absolute;
+        left: 25%; 
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .farmer-icon {
+        max-height: 200px;
+    }
 </style>
 
 <div class="text-center">
     <h1 class="display-4">Welcome to the Agri-Energy Connect Platform</h1>
     <h2>We hope you enjoy your time here and continue to sow your seeds!</h2>
+</div>
+
+<div class="icon-middle-left">
+    <img src="~/Images/Farmer Icon.png" alt="Farmer Icon" class="farmer-icon" />
 </div>
