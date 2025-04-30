@@ -1,7 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<!-- DeepSeek AI was used to help with issues with centering the icons -->
+<!--
+References:
+DeepSeek AI was used to help with issues with centering the icons
+https://www.geeksforgeeks.org/how-to-set-position-of-an-image-in-css/
+https://www.w3schools.com/css/css3_buttons.asp
+-->
+
 <style>
     footer {
         display: none;
@@ -19,23 +25,42 @@
         padding-top: 20px;
     }
 
-    .icon-middle-left {
+    .icon-container {
         position: absolute;
-        left: 25%; 
         top: 50%;
         transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .icon-middle-left {
+        left: 35%; /* Changed from 25% to move right */
     }
 
     .icon-middle-right {
-        position: absolute;
-        left: 65%; 
-        top: 50%;
-        transform: translateY(-50%);
+        left: 55%; /* Changed from 65% to move left */
     }
 
     .farmer-icon, .employee-icon {
         max-height: 180px;
     }
+
+    .signin-button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .signin-button:hover {
+            background-color: #45a049;
+        }
 </style>
 
 <div class="text-center">
@@ -43,11 +68,12 @@
     <h2>We hope you enjoy your time here and continue to sow your seeds!</h2>
 </div>
 
-<div class="icon-middle-left">
+<div class="icon-container icon-middle-left">
     <img src="~/Images/Farmer Icon.png" alt="Farmer Icon" class="farmer-icon" />
+    <button class="signin-button">Farmer Sign In</button>
 </div>
 
-
-<div class="icon-middle-right">
+<div class="icon-container icon-middle-right">
     <img src="~/Images/Employee Icon.png" alt="Employee Icon" class="employee-icon" />
+    <button class="signin-button">Employee Sign In</button>
 </div>
