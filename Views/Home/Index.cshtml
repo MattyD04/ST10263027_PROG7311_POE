@@ -36,11 +36,11 @@ https://www.w3schools.com/css/css3_buttons.asp
     }
 
     .icon-middle-left {
-        left: 35%; /* Changed from 25% to move right */
+        left: 35%; 
     }
 
     .icon-middle-right {
-        left: 55%; /* Changed from 65% to move left */
+        left: 55%; 
     }
 
     .farmer-icon, .employee-icon {
@@ -56,6 +56,8 @@ https://www.w3schools.com/css/css3_buttons.asp
         font-size: 16px;
         cursor: pointer;
         transition: background-color 0.3s;
+        text-decoration: none;
+        display: inline-block;
     }
 
         .signin-button:hover {
@@ -74,6 +76,6 @@ https://www.w3schools.com/css/css3_buttons.asp
 </div>
 
 <div class="icon-container icon-middle-right">
-    <img src="~/Images/Employee Icon.png" alt="Employee Icon" class="employee-icon" />
-    <button class="signin-button">Employee Sign In</button>
+    <img src="~/Images/Employee Icon 5.png" alt="Employee Icon" class="employee-icon" />
+    <a href="@Url.Action("EmployeeLogin", "Home")" class="signin-button">Employee Sign In</a>
 </div>

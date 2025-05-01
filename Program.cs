@@ -1,7 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using ST10263027_PROG7311_POE.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register DbContext with SQL Server (MUST be before Build())
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
