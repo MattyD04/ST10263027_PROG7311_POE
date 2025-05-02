@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using ST10263027_PROG7311_POE.Models;
 
 namespace ST10263027_PROG7311_POE.Repository
@@ -17,24 +18,22 @@ namespace ST10263027_PROG7311_POE.Repository
         public void AddEmployee(Employee employee)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
             {
-                string sql = @"
-                    INSERT INTO Employees (EmployeeId, userName, password)
-                    VALUES (@EmployeeId, @userName, @password)";
+                command.CommandText = @"
+                    INSERT INTO Employees (userName, password)
+                    VALUES (@userName, @password);
+                    SELECT CAST(SCOPE_IDENTITY() AS int);
+                ";
 
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
-                    command.Parameters.AddWithValue("@userName", employee.userName ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@password", employee.password ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@userName", employee.userName ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@password", employee.password ?? (object)DBNull.Value);
 
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
+                connection.Open();
+                employee.EmployeeId = (int)command.ExecuteScalar();
             }
         }
 
-        
         public Employee GetEmployeeById(int employeeId)
         {
             Employee employee = null;
@@ -55,8 +54,8 @@ namespace ST10263027_PROG7311_POE.Repository
                             employee = new Employee
                             {
                                 EmployeeId = Convert.ToInt32(reader["EmployeeId"]),
-                                userName = reader["userName"] == DBNull.Value ? null : reader["userName"].ToString(),
-                                password = reader["password"] == DBNull.Value ? null : reader["password"].ToString()
+                                userName = reader["userName"]?.ToString(),
+                                password = reader["password"]?.ToString()
                             };
                         }
                     }
@@ -66,82 +65,80 @@ namespace ST10263027_PROG7311_POE.Repository
             return employee;
         }
 
-        
-        public List<Employee> GetAllEmployees()
+        public Employee GetEmployeeByUsername(string username)
         {
-            List<Employee> employees = new List<Employee>();
+            Employee employee = null;
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM Employees";
+                string sql = "SELECT * FROM Employees WHERE userName = @userName";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
+                    command.Parameters.AddWithValue("@userName", username ?? (object)DBNull.Value);
                     connection.Open();
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.Read())
                         {
-                            employees.Add(new Employee
+                            employee = new Employee
                             {
                                 EmployeeId = Convert.ToInt32(reader["EmployeeId"]),
-                                userName = reader["userName"] == DBNull.Value ? null : reader["userName"].ToString(),
-                                password = reader["password"] == DBNull.Value ? null : reader["password"].ToString()
-                            });
+                                userName = reader["userName"]?.ToString(),
+                                password = reader["password"]?.ToString()
+                            };
                         }
                     }
                 }
             }
 
-            return employees;
+            return employee;
         }
 
-       
-        public void UpdateEmployee(Employee employee)
+        public Employee GetEmployeeByUsernameAndPassword(string username, string password)
         {
+            Employee employee = null;
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string sql = @"
-                    UPDATE Employees
-                    SET userName = @userName,
-                        password = @password
-                    WHERE EmployeeId = @EmployeeId";
+                string sql = "SELECT * FROM Employees WHERE userName = @userName AND password = @password";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue("@userName", employee.userName ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@password", employee.password ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
-
+                    command.Parameters.AddWithValue("@userName", username ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@password", password ?? (object)DBNull.Value);
                     connection.Open();
-                    int rowsAffected = command.ExecuteNonQuery();
 
-                    if (rowsAffected == 0)
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        throw new Exception("Employee not found.");
+                        if (reader.Read())
+                        {
+                            employee = new Employee
+                            {
+                                EmployeeId = Convert.ToInt32(reader["EmployeeId"]),
+                                userName = reader["userName"]?.ToString(),
+                                password = reader["password"]?.ToString()
+                            };
+                        }
                     }
                 }
             }
+
+            return employee;
         }
 
-        
-        public void DeleteEmployee(int employeeId)
+        public bool EmployeeExists(string username)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string sql = "DELETE FROM Employees WHERE EmployeeId = @EmployeeId";
+                string sql = "SELECT COUNT(1) FROM Employees WHERE userName = @userName";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue("@EmployeeId", employeeId);
+                    command.Parameters.AddWithValue("@userName", username ?? (object)DBNull.Value);
                     connection.Open();
-                    int rowsAffected = command.ExecuteNonQuery();
-
-                    if (rowsAffected == 0)
-                    {
-                        throw new Exception("Employee not found.");
-                    }
+                    return (int)command.ExecuteScalar() > 0;
                 }
             }
         }

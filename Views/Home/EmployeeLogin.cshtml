@@ -1,8 +1,11 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Employee Login";
+    var usernameValue = ViewData["Username"] as string ?? "";
+    var errorMessage = ViewBag.Error as string;
+    var usernameError = ViewBag.UsernameError as string;
+    var passwordError = ViewBag.PasswordError as string;
 }
-
+<!--DeepSeek AI helped to fix the error of the email and password validation rules not appearing in the log in form-->
 <style>
     .login-container {
         max-width: 400px;
@@ -11,7 +14,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        background-color: white; 
+        background-color: white;
     }
 
     .form-group {
@@ -22,7 +25,7 @@
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
-        color: #333; 
+        color: #333;
     }
 
     input[type="text"],
@@ -54,25 +57,47 @@
     .validation-message {
         color: red;
         font-size: 14px;
+        margin-top: 5px;
     }
 
-   
+    .help-text {
+        font-size: 12px;
+        color: #666;
+    }
 </style>
 
 <div class="login-container">
     <h2>Employee Login</h2>
+
+    @* Show general error message *@
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="validation-message">@errorMessage</div>
+    }
+
     <form method="post" action="/Employee/Login">
         <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required />
-            <span class="validation-message"></span>
+            <label for="username">Username (Email):</label>
+            <input type="text" id="username" name="username" value="@usernameValue" required />
+            @if (!string.IsNullOrEmpty(usernameError))
+            {
+                <div class="validation-message">@usernameError</div>
+            }
         </div>
 
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required />
-            <span class="validation-message"></span>
+
+            @if (!string.IsNullOrEmpty(passwordError))
+            {
+                <div class="validation-message">@passwordError</div>
+                <div class="help-text">
+                    Password must be at least 8 characters, include an uppercase letter, lowercase letter, a number, and a special character.
+                </div>
+            }
         </div>
+
 
         <button type="submit" class="login-button">Login</button>
     </form>
