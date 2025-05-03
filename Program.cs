@@ -23,7 +23,19 @@ builder.Services.AddScoped<EmployeeRepository>(provider =>
 // Register your services
 builder.Services.AddScoped<EmployeeService>();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
+
+// Add this after app.UseRouting();
+app.UseSession();
+
+
 
 // Middleware pipeline
 if (!app.Environment.IsDevelopment())

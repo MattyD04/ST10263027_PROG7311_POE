@@ -38,7 +38,8 @@ namespace ST10263027_PROG7311_POE.Controllers
                 HttpContext.Session.SetInt32("EmployeeId", employee.EmployeeId);
                 HttpContext.Session.SetString("Username", employee.userName);
 
-                return RedirectToAction("Index", "Home");
+                // Redirect to EmployeeDashboard in Home folder
+                return RedirectToAction("EmployeeDashboard", "Home");
             }
             catch (Exception ex)
             {
@@ -60,3 +61,4 @@ namespace ST10263027_PROG7311_POE.Controllers
         }
     }
 }
+//***********************************************End of file*****************************************//

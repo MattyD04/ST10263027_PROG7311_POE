@@ -22,12 +22,22 @@ namespace ST10263027_PROG7311_POE.Controllers
         {
             return View();
         }
-
+//***************************************************************************************************//
+//Employee-specific views
         public IActionResult EmployeeLogin()
         {
             return View();
         }
-        
+        public IActionResult EmployeeDashboard()
+        {
+            if (HttpContext.Session.GetInt32("EmployeeId") == null)
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
+            return View();
+        }
+//***************************************************************************************************//
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -36,3 +46,4 @@ namespace ST10263027_PROG7311_POE.Controllers
         }
     }
 }
+//***********************************************End of file*****************************************//
