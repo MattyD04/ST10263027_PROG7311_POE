@@ -8,5 +8,6 @@ namespace ST10263027_PROG7311_POE.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Farmer> Farmers { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
 }
