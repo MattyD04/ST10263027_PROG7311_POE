@@ -22,8 +22,8 @@ namespace ST10263027_PROG7311_POE.Controllers
         {
             return View();
         }
-//***************************************************************************************************//
-//Employee-specific views
+        //***************************************************************************************************//
+        //Employee-specific views
         public IActionResult EmployeeLogin()
         {
             return View();
@@ -37,8 +37,22 @@ namespace ST10263027_PROG7311_POE.Controllers
 
             return View();
         }
-//***************************************************************************************************//
+        //***************************************************************************************************//
+        //Farmer-specific views
+        public IActionResult FarmerLogin()
+        {
+            return View();
+        }
+        public IActionResult FarmerDashboard()
+        {
+            if (HttpContext.Session.GetInt32("FarmerId") == null)
+            {
+                return RedirectToAction("Login", "Farmer");
+            }
 
+            return View();
+        }
+        //***************************************************************************************************//
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

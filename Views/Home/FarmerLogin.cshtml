@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "Farmer Login";
+    var usernameValue = ViewData["Username"] as string ?? "";
+    var errorMessage = ViewBag.Error as string;
+    var usernameError = ViewBag.UsernameError as string;
+    var passwordError = ViewBag.PasswordError as string;
+}
+
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: white;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+        background-color: #fff;
+    }
+
+    .login-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #5D9C59; /* Green color suitable for farmers */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+        .login-button:hover {
+            background-color: #4a7c47;
+        }
+
+    .validation-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .help-text {
+        font-size: 12px;
+        color: #666;
+    }
+
+    footer {
+        display: none;
+    }
+</style>
+
+<div class="login-container">
+    <h2>Farmer Login</h2>
+
+    @* Show general error message *@
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="validation-message">@errorMessage</div>
+    }
+
+    <form method="post" action="/Farmer/Login">
+        <div class="form-group">
+            <label for="username">Username (Email):</label>
+            <input type="text" id="username" name="username" value="@usernameValue" required />
+            @if (!string.IsNullOrEmpty(usernameError))
+            {
+                <div class="validation-message">@usernameError</div>
+            }
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+
+            @if (!string.IsNullOrEmpty(passwordError))
+            {
+                <div class="validation-message">@passwordError</div>
+                <div class="help-text">
+                    Password must be at least 8 characters, include an uppercase letter, lowercase letter, a number, and a special character.
+                </div>
+            }
+        </div>
+
+        <button type="submit" class="login-button">Login</button>
+    </form>
+</div>
