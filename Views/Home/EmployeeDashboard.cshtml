@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Employee Dashboard";
 }
+<!--Claude AI was used to fix alignment issues-->
 <style>
     .border-right {
         border-right: 1px solid #dee2e6;
@@ -30,6 +31,17 @@
         padding: 8px 20px;
     }
 
+    .btn-outline-primary {
+        color: #007bff;
+        border-color: #007bff;
+        padding: 8px 20px;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
     .card {
         margin-bottom: 30px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -46,6 +58,44 @@
     .card-body {
         padding: 20px;
     }
+
+    .table {
+        margin-top: 15px;
+    }
+
+        .table th {
+            background-color: #f8f9fa;
+        }
+
+    .badge {
+        font-size: 85%;
+        padding: 5px 10px;
+        border-radius: 30px;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .date-range-container {
+        display: flex;
+        gap: 10px;
+    }
+
+        .date-range-container .form-control {
+            width: 100%;
+        }
 </style>
 <div class="container-fluid">
     <!-- Centered Header -->
@@ -87,7 +137,79 @@
         </div>
         <!-- Right Side -->
         <div class="col-md-6">
-            <h2>View Farmers/Products</h2>
+            <div style="max-width: 95%; margin-bottom: 20px;">
+                <h2 class="mb-4 text-center">View Farmers/Products</h2>
+            </div>
+
+            <!-- Filter Card -->
+            <div class="card" style="max-width: 95%;">
+                <div class="card-header">
+                    <h4>Filter Options</h4>
+                </div>
+                <div class="card-body">
+                    <form id="filterForm">
+                        <div class="form-group">
+                            <label for="farmerName">Farmer Name</label>
+                            <input type="text" class="form-control" id="farmerName" placeholder="Search by farmer name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productCategory">Product Category</label>
+                            <select class="form-control" id="productCategory">
+                                <option value="">All Categories</option>
+                                <option value="Vegetables">Vegetables</option>
+                                <option value="Fruits">Fruits</option>
+                                <option value="Dairy">Dairy</option>
+                                <option value="Grains">Grains</option>
+                                <option value="Livestock">Livestock</option>
+                                <option value="Poultry">Poultry</option>
+                                <option value="Organic">Organic</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Date Range</label>
+                            <div class="date-range-container">
+                                <div>
+                                    <label for="fromDate">From</label>
+                                    <input type="date" class="form-control" id="fromDate">
+                                </div>
+                                <div>
+                                    <label for="toDate">To</label>
+                                    <input type="date" class="form-control" id="toDate">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary">Apply Filters</button>
+                        <button type="button" class="btn btn-outline-primary ml-2">Reset</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results Table -->
+            <div class="card" style="max-width: 95%;">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4>Farmers/Products List</h4>
+                    <span class="badge badge-info">0 Results</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Farmer</th>
+                                    <th>Products</th>
+                                    <th>Production Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
