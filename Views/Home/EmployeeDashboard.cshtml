@@ -1,8 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Employee Dashboard";
 }
-
-
 <style>
     .border-right {
         border-right: 1px solid #dee2e6;
@@ -10,7 +8,7 @@
 
     .col-md-6 {
         padding: 20px;
-        min-height: 70vh; /* Reduced slightly to accommodate new header */
+        min-height: 70vh;
     }
 
     h1 {
@@ -21,8 +19,34 @@
     footer {
         display: none;
     }
-</style>
 
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        padding: 8px 20px;
+    }
+
+    .card {
+        margin-bottom: 30px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+</style>
 <div class="container-fluid">
     <!-- Centered Header -->
     <div class="row mb-4">
@@ -30,18 +54,40 @@
             <h1>Welcome to the Employee Dashboard</h1>
         </div>
     </div>
-
     <!-- Content Sections -->
     <div class="row">
         <!-- Left Side -->
         <div class="col-md-6 border-right">
-            <h2>Add Farmer</h2>
+            <div style="max-width: 85%; margin-bottom: 20px;">
+                <h2 class="mb-4 text-center">Add Farmer</h2>
+            </div>
+            <div class="card" style="max-width: 85%; margin-left: 0;">
+                <div class="card-header">
+                    <h4>Farmer Registration Form</h4>
+                </div>
+                <div class="card-body">
+                    <form id="addFarmerForm">
+                        <div class="form-group">
+                            <label for="username">Username (Email)</label>
+                            <input type="email" class="form-control" id="username" name="username" placeholder="farmer@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <small class="form-text text-muted">Password must be at least 8 characters long.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactNumber">Contact Number</label>
+                            <input type="tel" class="form-control" id="contactNumber" name="contactNumber" placeholder="e.g., 555-123-4567" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Register Farmer</button>
+                    </form>
+                </div>
+            </div>
         </div>
-
         <!-- Right Side -->
         <div class="col-md-6">
             <h2>View Farmers/Products</h2>
         </div>
     </div>
 </div>
-
