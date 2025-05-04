@@ -26,21 +26,30 @@
     }
 
     .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-        padding: 8px 20px;
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        padding: 12px 30px;
+        width: 100%;
+        max-width: 300px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .btn-primary:hover {
+        background-color: #45a049;
+        border-color: #45a049;
     }
 
     .btn-outline-primary {
-        color: #007bff;
-        border-color: #007bff;
+        color: #4CAF50;
+        border-color: #4CAF50;
         padding: 8px 20px;
     }
 
-        .btn-outline-primary:hover {
-            background-color: #007bff;
-            color: white;
-        }
+    .btn-outline-primary:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
 
     .card {
         margin-bottom: 30px;
@@ -63,9 +72,9 @@
         margin-top: 15px;
     }
 
-        .table th {
-            background-color: #f8f9fa;
-        }
+    .table th {
+        background-color: #f8f9fa;
+    }
 
     .badge {
         font-size: 85%;
@@ -93,10 +102,11 @@
         gap: 10px;
     }
 
-        .date-range-container .form-control {
-            width: 100%;
-        }
+    .date-range-container .form-control {
+        width: 100%;
+    }
 </style>
+
 <div class="container-fluid">
     <!-- Centered Header -->
     <div class="row mb-4">
@@ -130,7 +140,9 @@
                             <label for="contactNumber">Contact Number</label>
                             <input type="tel" class="form-control" id="contactNumber" name="contactNumber" placeholder="e.g., 555-123-4567" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Register Farmer</button>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary">Register Farmer</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -181,8 +193,10 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-primary">Apply Filters</button>
-                        <button type="button" class="btn btn-outline-primary ml-2">Reset</button>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary">Apply Filters</button>
+                            <button type="button" class="btn btn-outline-primary ml-2">Reset</button>
+                        </div>
                     </form>
                 </div>
             </div>

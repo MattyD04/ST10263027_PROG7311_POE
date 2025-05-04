@@ -4,3 +4,185 @@
 @{
     ViewData["Title"] = "Farmer Dashboard";
 }
+<!--Claude AI was used to fix alignment issues-->
+<style>
+    .border-right {
+        border-right: 1px solid #dee2e6;
+    }
+
+    .col-md-6 {
+        padding: 20px;
+        min-height: 70vh;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+        font-size: 2.5rem;
+    }
+
+    footer {
+        display: none;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        padding: 12px 30px;
+        width: 100%;
+        max-width: 300px;
+        display: block;
+        margin: 0 auto;
+    }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+        }
+
+    .btn-outline-primary {
+        color: #007bff;
+        border-color: #007bff;
+        padding: 8px 20px;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+    .card {
+        margin-bottom: 30px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .table {
+        margin-top: 15px;
+    }
+
+        .table th {
+            background-color: #f8f9fa;
+        }
+
+    .badge {
+        font-size: 85%;
+        padding: 5px 10px;
+        border-radius: 30px;
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Centered Header -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1>Welcome to the Farmer Dashboard</h1>
+        </div>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="row">
+        <!-- Left Side - Product Submission -->
+        <div class="col-md-6 border-right">
+            <div style="max-width: 85%; margin-bottom: 20px;">
+                <h2 class="mb-4 text-center">Product Submission</h2>
+            </div>
+            <div class="card" style="max-width: 85%; margin-left: 0;">
+                <div class="card-header">
+                    <h4>Product Information Form</h4>
+                </div>
+                <div class="card-body">
+                    <form id="productForm">
+                        <div class="form-group">
+                            <label for="farmerEmail">Farmer Username (Email)</label>
+                            <input type="email" class="form-control" id="farmerEmail" name="farmerEmail" placeholder="name@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactNumber">Contact Number</label>
+                            <input type="tel" class="form-control" id="contactNumber" name="contactNumber" placeholder="+27 12 345 6789" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" class="form-control" id="productName" name="productName" placeholder="Enter product name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productCategory">Product Category</label>
+                            <select class="form-control" id="productCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="Vegetables">Vegetables</option>
+                                <option value="Fruits">Fruits</option>
+                                <option value="Dairy">Dairy</option>
+                                <option value="Grains">Grains</option>
+                                <option value="Livestock">Livestock</option>
+                                <option value="Poultry">Poultry</option>
+                                <option value="Organic">Organic</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productionDate">Production Date</label>
+                            <input type="date" class="form-control" id="productionDate" name="productionDate" required>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary">Submit Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - My Products -->
+        <div class="col-md-6">
+            <div style="max-width: 95%; margin-bottom: 20px;">
+                <h2 class="mb-4 text-center">My Products</h2>
+            </div>
+
+            <!-- Results Table -->
+            <div class="card" style="max-width: 95%;">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4>Product List</h4>
+                    <span class="badge badge-info">0 Results</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Production Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

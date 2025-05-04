@@ -45,10 +45,6 @@ namespace ST10263027_PROG7311_POE.Controllers
         }
         public IActionResult FarmerDashboard()
         {
-            if (HttpContext.Session.GetInt32("FarmerId") == null)
-            {
-                return RedirectToAction("Login", "Farmer");
-            }
 
             return View();
         }
