@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Employee Dashboard";
 }
-<!--Claude AI was used to fix alignment issues-->
+<!--Claude AI was used to fix alignment issues and recommended the addition of the JS at the bottom for error messages and validation-->
 <style>
     .border-right {
         border-right: 1px solid #dee2e6;
@@ -126,19 +126,43 @@
                     <h4>Farmer Registration Form</h4>
                 </div>
                 <div class="card-body">
-                    <form id="addFarmerForm">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewBag.Error
+                        </div>
+                    }
+                    @if (ViewBag.Success != null)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            @ViewBag.Success
+                        </div>
+                    }
+                    <form asp-action="AddFarmer" asp-controller="Employee" method="post">
+                        @Html.AntiForgeryToken()
                         <div class="form-group">
-                            <label for="username">Username (Email)</label>
-                            <input type="email" class="form-control" id="username" name="username" placeholder="farmer@example.com" required>
+                            <label for="FarmerUserName">Username (Email)</label>
+                            <input type="email" class="form-control" id="FarmerUserName" name="FarmerUserName"
+                                   placeholder="farmer@example.com" required>
                         </div>
                         <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                            <small class="form-text text-muted">Password must be at least 8 characters long.</small>
+                            <label for="FarmerPassword">Password</label>
+                            <input type="password" class="form-control" id="FarmerPassword" name="FarmerPassword" required>
+                            <small class="form-text text-muted">
+                                Password must contain at least 8 characters, including:
+                                <ul>
+                                    <li>1 uppercase letter</li>
+                                    <li>1 lowercase letter</li>
+                                    <li>1 number</li>
+                                    <li>1 special character</li>
+                                </ul>
+                            </small>
                         </div>
                         <div class="form-group">
-                            <label for="contactNumber">Contact Number</label>
-                            <input type="tel" class="form-control" id="contactNumber" name="contactNumber" placeholder="e.g., 555-123-4567" required>
+                            <label for="FarmerContactNum">Contact Number</label>
+                            <input type="tel" class="form-control" id="FarmerContactNum" name="FarmerContactNum"
+                                   pattern="0[0-9]{9}" placeholder="e.g., 0123456789" required>
+                            <small class="form-text text-muted">South African format (10 digits starting with 0)</small>
                         </div>
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-primary">Register Farmer</button>
@@ -227,3 +251,38 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show/hide requirements on focus/blur
+            const fields = {
+                FarmerUserName: 'emailRequirements',
+                FarmerPassword: 'passwordRequirements',
+                FarmerContactNum: 'contactRequirements'
+            };
+
+            Object.entries(fields).forEach(([fieldId, requirementId]) => {
+                const field = document.getElementById(fieldId);
+                const requirement = document.getElementById(requirementId);
+
+                field.addEventListener('focus', () => {
+                    requirement.classList.remove('d-none');
+                });
+
+                field.addEventListener('blur', () => {
+                    if (!field.value) {
+                        requirement.classList.add('d-none');
+                    }
+                });
+
+                field.addEventListener('input', () => {
+                    if (field.value) {
+                        requirement.classList.remove('d-none');
+                    } else {
+                        requirement.classList.add('d-none');
+                    }
+                });
+            });
+        });
+    </script>
+}

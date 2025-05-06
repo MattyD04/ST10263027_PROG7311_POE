@@ -22,6 +22,7 @@ builder.Services.AddScoped<EmployeeRepository>(provider =>
 
 // Register your services
 builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<FarmerService>();
 
 builder.Services.AddSession(options =>
 {

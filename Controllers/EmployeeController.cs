@@ -13,6 +13,7 @@ namespace ST10263027_PROG7311_POE.Controllers
         public EmployeeController(EmployeeService employeeService)
         {
             _employeeService = employeeService;
+
         }
 
         public IActionResult Login()
@@ -54,10 +55,31 @@ namespace ST10263027_PROG7311_POE.Controllers
             }
         }
 
+
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Login", "Employee");
+        }
+        [HttpPost]
+        public IActionResult AddFarmer(Farmer farmer)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Home/EmployeeDashboard.cshtml", farmer);
+            }
+
+            try
+            {
+                _employeeService.AddFarmer(farmer);
+                ViewBag.Success = "Farmer added successfully!";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+            }
+
+            return View("~/Views/Home/EmployeeDashboard.cshtml");
         }
     }
 }

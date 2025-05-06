@@ -67,6 +67,44 @@ namespace ST10263027_PROG7311_POE.Services
                 return false;
             }
         }
+        // Add to EmployeeService.cs
+        public void AddFarmer(Farmer farmer)
+        {
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(farmer.FarmerUserName))
+                throw new Exception("Farmer username is required");
+
+            if (string.IsNullOrWhiteSpace(farmer.FarmerPassword))
+                throw new Exception("Password is required");
+
+            // Validate username format
+            if (!IsValidEmail(farmer.FarmerUserName))
+                throw new Exception("Farmer username must be a valid email address");
+
+            // Validate password strength
+            if (!IsPasswordValid(farmer.FarmerPassword))
+                throw new Exception("Password must contain at least 8 characters, including 1 uppercase, 1 lowercase, 1 number, and 1 special character");
+
+            // Validate contact number format
+            if (!IsValidContactNumber(farmer.FarmerContactNum))
+                throw new Exception("Contact number must be 10 digits and start with 0");
+
+            // Check for existing farmer
+            if (_employeeRepository.FarmerExists(farmer.FarmerUserName))
+                throw new Exception("Farmer username already exists");
+
+            // Add farmer to database
+            _employeeRepository.AddFarmer(farmer);
+        }
+
+        private bool IsValidContactNumber(string contactNumber)
+        {
+            if (string.IsNullOrWhiteSpace(contactNumber))
+                return false;
+
+            //Validates the phone number format to ensure it is 10 digits and starts with 0
+            return Regex.IsMatch(contactNumber, @"^0[0-9]{9}$");
+        }
 
         private bool IsPasswordValid(string password)
         {

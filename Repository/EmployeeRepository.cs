@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using ST10263027_PROG7311_POE.Models;
 
 namespace ST10263027_PROG7311_POE.Repository
@@ -140,6 +141,40 @@ namespace ST10263027_PROG7311_POE.Repository
                     connection.Open();
                     return (int)command.ExecuteScalar() > 0;
                 }
+            }
+        }
+        //The below methods had to be placed here as there were issues when trying to place them in the FarmerRepository file
+        public bool FarmerExists(string username)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string sql = "SELECT COUNT(1) FROM Farmers WHERE FarmerUserName = @FarmerUserName";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@FarmerUserName", username ?? (object)DBNull.Value);
+                    connection.Open();
+                    return (int)command.ExecuteScalar() > 0;
+                }
+            }
+        }
+
+        public void AddFarmer(Farmer farmer)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = @"
+            INSERT INTO Farmers (FarmerUserName, FarmerPassword, FarmerContactNum)
+            VALUES (@UserName, @Password, @ContactNum);
+            SELECT CAST(SCOPE_IDENTITY() AS int);";
+
+                command.Parameters.AddWithValue("@UserName", farmer.FarmerUserName ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Password", farmer.FarmerPassword ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@ContactNum", farmer.FarmerContactNum ?? (object)DBNull.Value);
+
+                connection.Open();
+                farmer.FarmerId = (int)command.ExecuteScalar();
             }
         }
     }
