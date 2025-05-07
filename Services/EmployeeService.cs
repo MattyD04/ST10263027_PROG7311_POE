@@ -13,7 +13,7 @@ namespace ST10263027_PROG7311_POE.Services
         {
             _employeeRepository = employeeRepository;
         }
-
+        //***************************************************************************************//
         public Employee LoginOrRegisterEmployee(string username, string password)
         {
             // Validate username format
@@ -49,7 +49,7 @@ namespace ST10263027_PROG7311_POE.Services
 
             return employee;
         }
-
+        //***************************************************************************************//
         private bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -67,7 +67,7 @@ namespace ST10263027_PROG7311_POE.Services
                 return false;
             }
         }
-        // Add to EmployeeService.cs
+        
         public void AddFarmer(Farmer farmer)
         {
             // Validate required fields

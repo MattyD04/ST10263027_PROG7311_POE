@@ -20,7 +20,7 @@ namespace ST10263027_PROG7311_POE.Controllers
         {
             return View("~/Views/Home/EmployeeLogin.cshtml");
         }
-
+        //***************************************************************************************//
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
@@ -54,7 +54,7 @@ namespace ST10263027_PROG7311_POE.Controllers
                 return View("~/Views/Home/EmployeeLogin.cshtml");
             }
         }
-
+        //***************************************************************************************//
 
         public IActionResult Logout()
         {

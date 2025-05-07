@@ -12,7 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register repository with connection string
+// Register repositories with connection strings
 builder.Services.AddScoped<EmployeeRepository>(provider =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
@@ -20,10 +20,18 @@ builder.Services.AddScoped<EmployeeRepository>(provider =>
     return new EmployeeRepository(connStr);
 });
 
+builder.Services.AddScoped<FarmerRepository>(provider =>
+{
+    var config = provider.GetRequiredService<IConfiguration>();
+    var connStr = config.GetConnectionString("DefaultConnection");
+    return new FarmerRepository(connStr);
+});
+
 // Register your services
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<FarmerService>();
 
+// Configure session state
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
@@ -35,8 +43,6 @@ var app = builder.Build();
 
 // Add this after app.UseRouting();
 app.UseSession();
-
-
 
 // Middleware pipeline
 if (!app.Environment.IsDevelopment())

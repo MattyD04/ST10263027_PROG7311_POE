@@ -34,7 +34,7 @@ namespace ST10263027_PROG7311_POE.Repository
                 employee.EmployeeId = (int)command.ExecuteScalar();
             }
         }
-
+        //***************************************************************************************//
         public Employee GetEmployeeById(int employeeId)
         {
             Employee employee = null;
@@ -65,7 +65,7 @@ namespace ST10263027_PROG7311_POE.Repository
 
             return employee;
         }
-
+        //***************************************************************************************//
         public Employee GetEmployeeByUsername(string username)
         {
             Employee employee = null;
@@ -96,7 +96,7 @@ namespace ST10263027_PROG7311_POE.Repository
 
             return employee;
         }
-
+        //***************************************************************************************//
         public Employee GetEmployeeByUsernameAndPassword(string username, string password)
         {
             Employee employee = null;
@@ -128,7 +128,7 @@ namespace ST10263027_PROG7311_POE.Repository
 
             return employee;
         }
-
+        //***************************************************************************************//
         public bool EmployeeExists(string username)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -143,6 +143,7 @@ namespace ST10263027_PROG7311_POE.Repository
                 }
             }
         }
+        //***************************************************************************************//
         //The below methods had to be placed here as there were issues when trying to place them in the FarmerRepository file
         public bool FarmerExists(string username)
         {

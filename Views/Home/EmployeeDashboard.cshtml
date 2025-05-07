@@ -35,10 +35,10 @@
         margin: 0 auto;
     }
 
-    .btn-primary:hover {
-        background-color: #45a049;
-        border-color: #45a049;
-    }
+        .btn-primary:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+        }
 
     .btn-outline-primary {
         color: #4CAF50;
@@ -46,10 +46,10 @@
         padding: 8px 20px;
     }
 
-    .btn-outline-primary:hover {
-        background-color: #4CAF50;
-        color: white;
-    }
+        .btn-outline-primary:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
 
     .card {
         margin-bottom: 30px;
@@ -72,9 +72,9 @@
         margin-top: 15px;
     }
 
-    .table th {
-        background-color: #f8f9fa;
-    }
+        .table th {
+            background-color: #f8f9fa;
+        }
 
     .badge {
         font-size: 85%;
@@ -102,9 +102,9 @@
         gap: 10px;
     }
 
-    .date-range-container .form-control {
-        width: 100%;
-    }
+        .date-range-container .form-control {
+            width: 100%;
+        }
 </style>
 
 <div class="container-fluid">
@@ -148,21 +148,11 @@
                         <div class="form-group">
                             <label for="FarmerPassword">Password</label>
                             <input type="password" class="form-control" id="FarmerPassword" name="FarmerPassword" required>
-                            <small class="form-text text-muted">
-                                Password must contain at least 8 characters, including:
-                                <ul>
-                                    <li>1 uppercase letter</li>
-                                    <li>1 lowercase letter</li>
-                                    <li>1 number</li>
-                                    <li>1 special character</li>
-                                </ul>
-                            </small>
                         </div>
                         <div class="form-group">
                             <label for="FarmerContactNum">Contact Number</label>
                             <input type="tel" class="form-control" id="FarmerContactNum" name="FarmerContactNum"
-                                   pattern="0[0-9]{9}" placeholder="e.g., 0123456789" required>
-                            <small class="form-text text-muted">South African format (10 digits starting with 0)</small>
+                                   placeholder="e.g., 0123456789" required>
                         </div>
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-primary">Register Farmer</button>
@@ -253,36 +243,9 @@
 </div>
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show/hide requirements on focus/blur
-            const fields = {
-                FarmerUserName: 'emailRequirements',
-                FarmerPassword: 'passwordRequirements',
-                FarmerContactNum: 'contactRequirements'
-            };
-
-            Object.entries(fields).forEach(([fieldId, requirementId]) => {
-                const field = document.getElementById(fieldId);
-                const requirement = document.getElementById(requirementId);
-
-                field.addEventListener('focus', () => {
-                    requirement.classList.remove('d-none');
-                });
-
-                field.addEventListener('blur', () => {
-                    if (!field.value) {
-                        requirement.classList.add('d-none');
-                    }
-                });
-
-                field.addEventListener('input', () => {
-                    if (field.value) {
-                        requirement.classList.remove('d-none');
-                    } else {
-                        requirement.classList.add('d-none');
-                    }
-                });
-            });
+        // JavaScript was simplified as validation rules were removed
+        document.addEventListener('DOMContentLoaded', function () {
+            // Simple form handling can be added here if needed
         });
     </script>
 }
