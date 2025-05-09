@@ -3,7 +3,7 @@ using ST10263027_PROG7311_POE.Models;
 using ST10263027_PROG7311_POE.Services;
 using ST10263027_PROG7311_POE.Repository;
 using System;
-//Chatgpt was used to fix error of the user not being directed to the FarmerDashboard page
+
 namespace ST10263027_PROG7311_POE.Controllers
 {
     public class FarmerController : Controller
@@ -75,19 +75,15 @@ namespace ST10263027_PROG7311_POE.Controllers
             var username = HttpContext.Session.GetString("FarmerUsername");
             ViewBag.WelcomeMessage = $"Welcome, {username}!";
 
+            // Get list of farmer's products for the dashboard
+            var products = _farmerService.GetFarmerProducts(farmerId.Value);
+
             // Explicitly load the view from /Views/Home/
-            return View("~/Views/Home/FarmerDashboard.cshtml");
-        }
-        // Add to FarmerController
-        [HttpGet]
-        public IActionResult AddProduct()
-        {
-            var farmerId = HttpContext.Session.GetInt32("FarmerId");
-            if (farmerId == null) return RedirectToAction("Login");
-
-            return View(new Product());
+            return View("~/Views/Home/FarmerDashboard.cshtml", products);
         }
 
+        // POST: /Farmer/AddProduct
+        //Claude AI was used to fix this method that was not properly saving uploading and saving a product to the database
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddProduct(Product product)
@@ -97,26 +93,31 @@ namespace ST10263027_PROG7311_POE.Controllers
 
             try
             {
+                // Set FarmerId from session
+                product.FarmerId = farmerId.Value;
+
+                // Remove FarmerId and Farmer from ModelState validation
+                ModelState.Remove("FarmerId");
+                ModelState.Remove("Farmer");
+
                 if (ModelState.IsValid)
                 {
-                    product.FarmerId = farmerId.Value;
                     _farmerService.AddProduct(product);
-
                     TempData["SuccessMessage"] = "Product added successfully!";
                     return RedirectToAction("FarmerDashboard");
                 }
 
-                return View(product);
+                // Handle validation errors
+                ViewBag.ProductError = "Please correct the errors and try again.";
+                return View("~/Views/Home/FarmerDashboard.cshtml", _farmerService.GetFarmerProducts(farmerId.Value));
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"Error adding product: {ex.Message}");
-                return View(product);
+                ViewBag.ProductError = $"Error: {ex.Message}";
+                return View("~/Views/Home/FarmerDashboard.cshtml", _farmerService.GetFarmerProducts(farmerId.Value));
             }
         }
 
-        
-        
         // GET: /Farmer/Logout
         public IActionResult Logout()
         {

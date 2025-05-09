@@ -21,8 +21,6 @@ namespace ST10263027_PROG7311_POE.Models
         [Column("FarmerId")]
         public int? FarmerId { get; set; } // Nullable (matches SQL)
 
-        // Navigation property to Farmer (optional)
-        [ForeignKey("FarmerId")]
-        public virtual Farmer Farmer { get; set; }
+       
     }
 }

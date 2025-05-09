@@ -1,10 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<ST10263027_PROG7311_POE.Models.Product>
+
 @{
     ViewData["Title"] = "Farmer Dashboard";
 }
-<!--Claude AI was used to fix alignment issues-->
+
 <style>
     .border-right {
         border-right: 1px solid #dee2e6;
@@ -43,17 +42,6 @@
             border-color: #45a049;
         }
 
-    .btn-outline-primary {
-        color: #007bff;
-        border-color: #007bff;
-        padding: 8px 20px;
-    }
-
-        .btn-outline-primary:hover {
-            background-color: #007bff;
-            color: white;
-        }
-
     .card {
         margin-bottom: 30px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -89,17 +77,33 @@
         background-color: #17a2b8;
         color: white;
     }
+
+    .alert {
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
 </style>
 
 <div class="container-fluid">
-    <!-- Centered Header -->
     <div class="row mb-4">
         <div class="col-12 text-center">
-            <h1>Welcome to the Farmer Dashboard</h1>
+            <h1>@ViewBag.WelcomeMessage</h1>
         </div>
     </div>
 
-    <!-- Content Sections -->
     <div class="row">
         <!-- Left Side - Product Submission -->
         <div class="col-md-6 border-right">
@@ -111,25 +115,34 @@
                     <h4>Product Information Form</h4>
                 </div>
                 <div class="card-body">
-                    <form id="productForm">
+                    <!-- Display success message -->
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+
+                    <!-- Display error message -->
+                    @if (ViewBag.ProductError != null)
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.ProductError
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                        </div>
+                    }
+
+                    <form asp-action="AddProduct" asp-controller="Farmer" method="post">
+                        @Html.AntiForgeryToken()
+
                         <div class="form-group">
-                            <label for="farmerEmail">Farmer Username (Email)</label>
-                            <input type="email" class="form-control" id="farmerEmail" name="farmerEmail" placeholder="name@example.com" required>
+                            <label for="ProductName">Product Name</label>
+                            <input type="text" class="form-control" id="ProductName" name="ProductName" placeholder="Enter product name" required />
                         </div>
 
                         <div class="form-group">
-                            <label for="contactNumber">Contact Number</label>
-                            <input type="tel" class="form-control" id="contactNumber" name="contactNumber" placeholder="+27 12 345 6789" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="productName">Product Name</label>
-                            <input type="text" class="form-control" id="productName" name="productName" placeholder="Enter product name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="productCategory">Product Category</label>
-                            <select class="form-control" id="productCategory" required>
+                            <label for="ProductCategory">Product Category</label>
+                            <select class="form-control" id="ProductCategory" name="ProductCategory" required>
                                 <option value="">Select Category</option>
                                 <option value="Vegetables">Vegetables</option>
                                 <option value="Fruits">Fruits</option>
@@ -142,8 +155,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="productionDate">Production Date</label>
-                            <input type="date" class="form-control" id="productionDate" name="productionDate" required>
+                            <label for="ProductionDate">Production Date</label>
+                            <input type="date" class="form-control" id="ProductionDate" name="ProductionDate" required />
                         </div>
 
                         <div class="form-group text-center">
@@ -160,27 +173,40 @@
                 <h2 class="mb-4 text-center">My Products</h2>
             </div>
 
-            <!-- Results Table -->
             <div class="card" style="max-width: 95%;">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4>Product List</h4>
-                    <span class="badge badge-info">0 Results</span>
+                    <span class="badge badge-info">@(Model != null ? Model.Count : 0) Results</span>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Product Name</th>
-                                    <th>Category</th>
-                                    <th>Production Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Data will be populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Category</th>
+                                        <th>Production Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var product in Model)
+                                    {
+                                        <tr>
+                                            <td>@product.ProductName</td>
+                                            <td>@product.ProductCategory</td>
+                                            <td>@product.ProductionDate?.ToString("yyyy-MM-dd")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>No products submitted yet.</p>
+                    }
                 </div>
             </div>
         </div>
