@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using ST10263027_PROG7311_POE.Models;
 using ST10263027_PROG7311_POE.Services;
@@ -64,6 +66,13 @@ namespace ST10263027_PROG7311_POE.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        //***************************************************************************************************//
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            return RedirectToAction("Index", "Home");
         }
     }
 }
