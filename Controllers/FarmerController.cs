@@ -78,7 +78,45 @@ namespace ST10263027_PROG7311_POE.Controllers
             // Explicitly load the view from /Views/Home/
             return View("~/Views/Home/FarmerDashboard.cshtml");
         }
+        // Add to FarmerController
+        [HttpGet]
+        public IActionResult AddProduct()
+        {
+            var farmerId = HttpContext.Session.GetInt32("FarmerId");
+            if (farmerId == null) return RedirectToAction("Login");
 
+            return View(new Product());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddProduct(Product product)
+        {
+            var farmerId = HttpContext.Session.GetInt32("FarmerId");
+            if (farmerId == null) return RedirectToAction("Login");
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    product.FarmerId = farmerId.Value;
+                    _farmerService.AddProduct(product);
+
+                    TempData["SuccessMessage"] = "Product added successfully!";
+                    return RedirectToAction("FarmerDashboard");
+                }
+
+                return View(product);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error adding product: {ex.Message}");
+                return View(product);
+            }
+        }
+
+        
+        
         // GET: /Farmer/Logout
         public IActionResult Logout()
         {

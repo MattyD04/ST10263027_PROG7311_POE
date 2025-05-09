@@ -226,7 +226,64 @@ namespace ST10263027_PROG7311_POE.Repository
 
             return farmers;
         }
+
+        // PRODUCT METHODS
+        public void AddProduct(Product product)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = @"
+                    INSERT INTO Products (ProductName, ProductCategory, ProductionDate, FarmerId)
+                    VALUES (@ProductName, @ProductCategory, @ProductionDate, @FarmerId);
+                    SELECT CAST(SCOPE_IDENTITY() AS int);
+                ";
+
+                command.Parameters.AddWithValue("@ProductName", product.ProductName ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@ProductCategory", product.ProductCategory ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@ProductionDate", product.ProductionDate ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@FarmerId", product.FarmerId ?? (object)DBNull.Value);
+
+                connection.Open();
+                product.ProductId = (int)command.ExecuteScalar();
+            }
+        }
+
+        public List<Product> GetProductsByFarmerId(int farmerId)
+        {
+            var products = new List<Product>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string sql = @"
+                    SELECT ProductId, ProductName, ProductCategory, ProductionDate, FarmerId 
+                    FROM Products 
+                    WHERE FarmerId = @FarmerId
+                    ORDER BY ProductionDate DESC";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@FarmerId", farmerId);
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            products.Add(new Product
+                            {
+                                ProductId = Convert.ToInt32(reader["ProductId"]),
+                                ProductName = reader["ProductName"]?.ToString(),
+                                ProductCategory = reader["ProductCategory"]?.ToString(),
+                                ProductionDate = reader["ProductionDate"] as DateTime?,
+                                FarmerId = reader["FarmerId"] as int?
+                            });
+                        }
+                    }
+                }
+            }
+
+            return products;
+        }
     }
-
-
 }

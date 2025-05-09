@@ -29,5 +29,21 @@ namespace ST10263027_PROG7311_POE.Services
 
             return farmer;
         }
+        // Add to FarmerService class
+        public void AddProduct(Product product)
+        {
+            // Ensure FarmerId exists
+            if (!product.FarmerId.HasValue)
+            {
+                throw new ArgumentException("Product must be associated with a farmer");
+            }
+
+            _farmerRepository.AddProduct(product);
+        }
+
+        public List<Product> GetFarmerProducts(int farmerId)
+        {
+            return _farmerRepository.GetProductsByFarmerId(farmerId);
+        }
     }
 }
