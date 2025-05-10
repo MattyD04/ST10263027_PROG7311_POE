@@ -1,6 +1,7 @@
 ﻿using ST10263027_PROG7311_POE.Models;
 using ST10263027_PROG7311_POE.Repository;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace ST10263027_PROG7311_POE.Services
@@ -40,7 +41,7 @@ namespace ST10263027_PROG7311_POE.Services
                 var newEmployee = new Employee
                 {
                     userName = username,
-                    password = password 
+                    password = password
                 };
 
                 _employeeRepository.AddEmployee(newEmployee);
@@ -67,7 +68,7 @@ namespace ST10263027_PROG7311_POE.Services
                 return false;
             }
         }
-        
+        //***************************************************************************************//
         public void AddFarmer(Farmer farmer)
         {
             // Validate required fields
@@ -96,7 +97,7 @@ namespace ST10263027_PROG7311_POE.Services
             // Add farmer to database
             _employeeRepository.AddFarmer(farmer);
         }
-
+        //***************************************************************************************//
         private bool IsValidContactNumber(string contactNumber)
         {
             if (string.IsNullOrWhiteSpace(contactNumber))
@@ -105,7 +106,7 @@ namespace ST10263027_PROG7311_POE.Services
             //Validates the phone number format to ensure it is 10 digits and starts with 0
             return Regex.IsMatch(contactNumber, @"^0[0-9]{9}$");
         }
-
+        //***************************************************************************************//
         private bool IsPasswordValid(string password)
         {
             if (string.IsNullOrWhiteSpace(password))
@@ -113,7 +114,7 @@ namespace ST10263027_PROG7311_POE.Services
 
             try
             {
-//Regex that ensures passwords has: minimum 8 characters, at least 1 uppercase letter and 1 lowercase letter, 1 number and 1 special character
+                //Regex that ensures passwords has: minimum 8 characters, at least 1 uppercase letter and 1 lowercase letter, 1 number and 1 special character
                 return Regex.IsMatch(password,
                     @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$",
                     RegexOptions.None, TimeSpan.FromMilliseconds(250));
@@ -122,6 +123,54 @@ namespace ST10263027_PROG7311_POE.Services
             {
                 return false;
             }
+        }
+
+        //***************************************************************************************//
+        public class FarmerProductViewModel
+        {
+            public int FarmerId { get; set; }
+            public string FarmerUserName { get; set; }
+            public string FarmerContactNum { get; set; }
+            public string ProductName { get; set; }
+            public string ProductCategory { get; set; }
+            public DateTime? ProductionDate { get; set; }
+        }
+
+        //***************************************************************************************//
+        public List<FarmerProductViewModel> GetFarmersWithProducts(string farmerName = null, string productCategory = null, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            // Get all farmers and their products
+            var farmersWithProducts = _employeeRepository.GetFarmersWithProducts();
+
+            // Apply filters
+            var filteredResults = farmersWithProducts.AsQueryable();
+
+            // Filter by farmer name if provided
+            if (!string.IsNullOrWhiteSpace(farmerName))
+            {
+                filteredResults = filteredResults.Where(fp =>
+                    fp.FarmerUserName.Contains(farmerName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Filter by product category if provided
+            if (!string.IsNullOrWhiteSpace(productCategory))
+            {
+                filteredResults = filteredResults.Where(fp =>
+                    fp.ProductCategory.Equals(productCategory, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Filter by date range if provided
+            if (fromDate.HasValue)
+            {
+                filteredResults = filteredResults.Where(fp => fp.ProductionDate >= fromDate.Value);
+            }
+
+            if (toDate.HasValue)
+            {
+                filteredResults = filteredResults.Where(fp => fp.ProductionDate <= toDate.Value);
+            }
+
+            return filteredResults.ToList();
         }
     }
 }

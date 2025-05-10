@@ -4,6 +4,7 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using ST10263027_PROG7311_POE.Models;
+using ST10263027_PROG7311_POE.Services;
 
 namespace ST10263027_PROG7311_POE.Repository
 {
@@ -177,6 +178,56 @@ namespace ST10263027_PROG7311_POE.Repository
                 connection.Open();
                 farmer.FarmerId = (int)command.ExecuteScalar();
             }
+        }
+        // Add this method to your EmployeeRepository class
+
+        public List<EmployeeService.FarmerProductViewModel> GetFarmersWithProducts()
+        {
+            var farmersWithProducts = new List<EmployeeService.FarmerProductViewModel>();
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"
+                SELECT f.FarmerId, f.FarmerUserName, f.FarmerContactNum, 
+                       p.ProductName, p.ProductCategory, p.ProductionDate
+                FROM Farmers f
+                LEFT JOIN Products p ON f.FarmerId = p.FarmerId
+                ORDER BY f.FarmerUserName, p.ProductionDate DESC";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var viewModel = new EmployeeService.FarmerProductViewModel
+                                {
+                                    FarmerId = Convert.ToInt32(reader["FarmerId"]),
+                                    FarmerUserName = reader["FarmerUserName"].ToString(),
+                                    FarmerContactNum = reader["FarmerContactNum"].ToString(),
+                                    ProductName = reader["ProductName"] != DBNull.Value ? reader["ProductName"].ToString() : "No products",
+                                    ProductCategory = reader["ProductCategory"] != DBNull.Value ? reader["ProductCategory"].ToString() : "N/A",
+                                    ProductionDate = reader["ProductionDate"] != DBNull.Value ?
+                                        Convert.ToDateTime(reader["ProductionDate"]) : (DateTime?)null
+                                };
+
+                                farmersWithProducts.Add(viewModel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log exception details here
+                throw new Exception("Error retrieving farmers and products: " + ex.Message);
+            }
+
+            return farmersWithProducts;
         }
     }
 }

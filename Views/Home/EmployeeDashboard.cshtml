@@ -1,7 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Employee Dashboard";
 }
-<!--Claude AI was used to fix alignment issues and recommended the addition of the JS at the bottom for error messages and validation-->
+<!--Claude AI was used to fix alignment issues and recommended the addition of the JS at the bottom for error messages and validation, 
+    as well as added the JS to help display the products along with the farmer details as I was having issues with that
+-->
 <style>
     .border-right {
         border-right: 1px solid #dee2e6;
@@ -243,9 +245,142 @@
 </div>
 @section Scripts {
     <script>
-        // JavaScript was simplified as validation rules were removed
         document.addEventListener('DOMContentLoaded', function () {
-            // Simple form handling can be added here if needed
-        });
+            // Get filter elements
+            const farmerNameInput = document.getElementById('farmerName');
+            const productCategorySelect = document.getElementById('productCategory');
+                const fromDateInput = document.getElementById('fromDate');
+                    const toDateInput = document.getElementById('toDate');
+                    const applyFilterBtn = document.querySelector('.btn-primary');
+                    const resetFilterBtn = document.querySelector('.btn-outline-primary');
+                    const resultsCount = document.querySelector('.badge-info');
+                    const resultsTable = document.querySelector('table tbody');
+
+                    // Initialize with empty filter to load all data
+                    loadFarmersWithProducts();
+
+                    // Add event listeners
+                    applyFilterBtn.addEventListener('click', function() {
+                        loadFarmersWithProducts();
+                    });
+
+                    resetFilterBtn.addEventListener('click', function() {
+                        farmerNameInput.value = '';
+                        productCategorySelect.value = '';
+                        fromDateInput.value = '';
+                        toDateInput.value = '';
+                        loadFarmersWithProducts();
+                    });
+
+                    // Function to load farmers with products
+                    function loadFarmersWithProducts() {
+                        const farmerName = farmerNameInput.value.trim();
+                        const productCategory = productCategorySelect.value;
+                        const fromDate = fromDateInput.value ? fromDateInput.value : null;
+                        const toDate = toDateInput.value ? toDateInput.value : null;
+
+                        // Build query string
+                        let queryParams = new URLSearchParams();
+                        if (farmerName) queryParams.append('farmerName', farmerName);
+                        if (productCategory) queryParams.append('productCategory', productCategory);
+                        if (fromDate) queryParams.append('fromDate', fromDate);
+                        if (toDate) queryParams.append('toDate', toDate);
+
+                        // Make AJAX request
+                        fetch(`/Employee/GetFarmersWithProducts?${queryParams.toString()}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    displayFarmersWithProducts(data.data);
+                                    resultsCount.textContent = `${data.count} Results`;
+                                } else {
+                                    console.error('Error:', data.message);
+                                    resultsTable.innerHTML = `<tr><td colspan="3" class="text-center text-danger">Error: ${data.message}</td></tr>`;
+                                    resultsCount.textContent = '0 Results';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Fetch error:', error);
+                                resultsTable.innerHTML = '<tr><td colspan="3" class="text-center text-danger">Error fetching data. Please try again.</td></tr>';
+                                resultsCount.textContent = '0 Results';
+                            });
+                    }
+
+                    // Function to display farmers with products in the table
+                    function displayFarmersWithProducts(data) {
+                        resultsTable.innerHTML = '';
+
+                        if (data.length === 0) {
+                            resultsTable.innerHTML = '<tr><td colspan="3" class="text-center">No results found</td></tr>';
+                            return;
+                        }
+
+                        // Group by farmer
+                        const farmerGroups = {};
+                        data.forEach(item => {
+                            if (!farmerGroups[item.farmerId]) {
+                                farmerGroups[item.farmerId] = {
+                                    farmer: item.farmerUserName,
+                                    contactNum: item.farmerContactNum,
+                                    products: []
+                                };
+                            }
+
+                            // Only add product if it exists
+                            if (item.productName && item.productName !== "No products") {
+                                farmerGroups[item.farmerId].products.push({
+                                    name: item.productName,
+                                    category: item.productCategory,
+                                    date: item.productionDate ? new Date(item.productionDate).toLocaleDateString() : 'N/A'
+                                });
+                            }
+                        });
+
+                        // Create table rows
+                        Object.values(farmerGroups).forEach(group => {
+                            const row = document.createElement('tr');
+
+                            // Farmer column with contact number
+                            const farmerCell = document.createElement('td');
+                            farmerCell.innerHTML = `<strong>${group.farmer}</strong><br><small>${group.contactNum}</small>`;
+                            row.appendChild(farmerCell);
+
+                            // Products column
+                            const productsCell = document.createElement('td');
+                            if (group.products.length === 0) {
+                                productsCell.textContent = 'No products';
+                            } else {
+                                const productsList = document.createElement('ul');
+                                productsList.className = 'list-unstyled mb-0';
+                                group.products.forEach(product => {
+                                    const productItem = document.createElement('li');
+                                    productItem.innerHTML = `<span class="badge badge-success">${product.category}</span> ${product.name}`;
+                                    productsList.appendChild(productItem);
+                                });
+                                productsCell.appendChild(productsList);
+                            }
+                            row.appendChild(productsCell);
+
+                            // Production dates column
+                            const datesCell = document.createElement('td');
+                            if (group.products.length === 0) {
+                                datesCell.textContent = 'N/A';
+                            } else {
+                                const datesList = document.createElement('ul');
+                                datesList.className = 'list-unstyled mb-0';
+                                group.products.forEach(product => {
+                                    const dateItem = document.createElement('li');
+                                    dateItem.textContent = product.date;
+                                    datesList.appendChild(dateItem);
+                                });
+                                datesCell.appendChild(datesList);
+                            }
+                            row.appendChild(datesCell);
+
+                            resultsTable.appendChild(row);
+                        });
+                    }
+                });
     </script>
+}
 }
