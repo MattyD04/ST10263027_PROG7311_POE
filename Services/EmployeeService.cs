@@ -2,6 +2,7 @@
 using ST10263027_PROG7311_POE.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq; 
 using System.Text.RegularExpressions;
 
 namespace ST10263027_PROG7311_POE.Services
@@ -139,39 +140,51 @@ namespace ST10263027_PROG7311_POE.Services
         //***************************************************************************************//
         public List<FarmerProductViewModel> GetFarmersWithProducts(string farmerName = null, string productCategory = null, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            // Get all farmers and their products
+            // Get all farmers and their products from repository
             var farmersWithProducts = _employeeRepository.GetFarmersWithProducts();
 
-            // Apply filters
-            var filteredResults = farmersWithProducts.AsQueryable();
+            // Create a list to store filtered results
+            var filteredResults = farmersWithProducts.ToList();
 
-            // Filter by farmer name if provided
+            // Filter by farmer name if provided (case insensitive contains search)
             if (!string.IsNullOrWhiteSpace(farmerName))
             {
                 filteredResults = filteredResults.Where(fp =>
-                    fp.FarmerUserName.Contains(farmerName, StringComparison.OrdinalIgnoreCase));
+                    fp.FarmerUserName != null &&
+                    fp.FarmerUserName.IndexOf(farmerName, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
             }
 
-            // Filter by product category if provided
+            // Filter by product category if provided (case insensitive exact match)
             if (!string.IsNullOrWhiteSpace(productCategory))
             {
                 filteredResults = filteredResults.Where(fp =>
-                    fp.ProductCategory.Equals(productCategory, StringComparison.OrdinalIgnoreCase));
+                    fp.ProductCategory != null &&
+                    fp.ProductCategory.Equals(productCategory, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
             // Filter by date range if provided
             if (fromDate.HasValue)
             {
-                filteredResults = filteredResults.Where(fp => fp.ProductionDate >= fromDate.Value);
+                filteredResults = filteredResults.Where(fp =>
+                    fp.ProductionDate.HasValue &&
+                    fp.ProductionDate.Value.Date >= fromDate.Value.Date).ToList();
             }
 
             if (toDate.HasValue)
             {
-                filteredResults = filteredResults.Where(fp => fp.ProductionDate <= toDate.Value);
+                filteredResults = filteredResults.Where(fp =>
+                    fp.ProductionDate.HasValue &&
+                    fp.ProductionDate.Value.Date <= toDate.Value.Date).ToList();
             }
 
-            return filteredResults.ToList();
+            // Handle null production dates by putting them at the end
+            var orderedResults = filteredResults
+                .OrderBy(fp => fp.ProductionDate.HasValue ? 0 : 1) // Items with dates come first
+                .ThenBy(fp => fp.ProductionDate)
+                .ThenBy(fp => fp.FarmerUserName)
+                .ToList();
+
+            return orderedResults;
         }
     }
 }
-//***********************************************End of file*****************************************//

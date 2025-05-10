@@ -4,6 +4,7 @@ using ST10263027_PROG7311_POE.Models;
 using ST10263027_PROG7311_POE.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ST10263027_PROG7311_POE.Controllers
 {
@@ -14,10 +15,12 @@ namespace ST10263027_PROG7311_POE.Controllers
         {
             _employeeService = employeeService;
         }
+
         public IActionResult Login()
         {
             return View("~/Views/Home/EmployeeLogin.cshtml");
         }
+
         //***************************************************************************************//
         [HttpPost]
         public IActionResult Login(string username, string password)
@@ -47,6 +50,7 @@ namespace ST10263027_PROG7311_POE.Controllers
                 return View("~/Views/Home/EmployeeLogin.cshtml");
             }
         }
+
         //***************************************************************************************//
         public IActionResult Logout()
         {
@@ -75,16 +79,32 @@ namespace ST10263027_PROG7311_POE.Controllers
 
         //***************************************************************************************//
         [HttpGet]
-        public IActionResult GetFarmersWithProducts(string farmerName, string productCategory, DateTime? fromDate, DateTime? toDate)
+        public IActionResult GetFarmersWithProducts(string farmerName = null, string productCategory = null,
+                                                  string fromDate = null, string toDate = null)
         {
             try
             {
-                var farmersWithProducts = _employeeService.GetFarmersWithProducts(farmerName, productCategory, fromDate, toDate);
-                return Json(new { success = true, data = farmersWithProducts, count = farmersWithProducts.Count });
+                // Parse date strings to DateTime objects if provided
+                DateTime? fromDateObj = !string.IsNullOrEmpty(fromDate) ? DateTime.Parse(fromDate) : null;
+                DateTime? toDateObj = !string.IsNullOrEmpty(toDate) ? DateTime.Parse(toDate) : null;
+
+                // Get filtered farmers with products
+                var farmersWithProducts = _employeeService.GetFarmersWithProducts(farmerName, productCategory, fromDateObj, toDateObj);
+
+                return Json(new
+                {
+                    success = true,
+                    data = farmersWithProducts,
+                    count = farmersWithProducts.Count
+                });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = ex.Message });
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
             }
         }
     }
