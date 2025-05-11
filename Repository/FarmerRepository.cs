@@ -6,6 +6,7 @@ using ST10263027_PROG7311_POE.Models;
 
 namespace ST10263027_PROG7311_POE.Repository
 {
+    //This file handles all the create, read, update, delete (CRUD) operations for the managing a farmer and products
     public class FarmerRepository
     {
         private readonly string _connectionString;
@@ -14,8 +15,8 @@ namespace ST10263027_PROG7311_POE.Repository
         {
             _connectionString = connectionString;
         }
-
-        // CREATE - Add a new farmer to the database
+        //***************************************************************************************//
+        //This method is used to add a new farmer to the database
         public void AddFarmer(Farmer farmer)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -24,8 +25,8 @@ namespace ST10263027_PROG7311_POE.Repository
                 command.CommandText = @"
                     INSERT INTO Farmers (FarmerUserName, FarmerPassword, FarmerContactNum)
                     VALUES (@FarmerUserName, @FarmerPassword, @FarmerContactNum);
-                    SELECT CAST(SCOPE_IDENTITY() AS int);
-                ";
+                    SELECT CAST(SCOPE_IDENTITY() AS int); 
+                "; //This line retrieves the ID of the newly inserted farmer
 
                 command.Parameters.AddWithValue("@FarmerUserName", farmer.FarmerUserName ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@FarmerPassword", farmer.FarmerPassword ?? (object)DBNull.Value);
@@ -35,15 +36,16 @@ namespace ST10263027_PROG7311_POE.Repository
                 farmer.FarmerId = (int)command.ExecuteScalar();
             }
         }
-
-        // READ - Get a farmer by ID
+        //***************************************************************************************//
+        //This method handles the retrieval of a farmer from the database using FarmerId in the farmer table
+        //Debugging and corrections done by DeepSeek AI
         public Farmer GetFarmerById(int farmerId)
         {
             Farmer farmer = null;
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM Farmers WHERE FarmerId = @FarmerId";
+                string sql = "SELECT * FROM Farmers WHERE FarmerId = @FarmerId"; // SQL query to select a farmer by ID
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -68,15 +70,15 @@ namespace ST10263027_PROG7311_POE.Repository
 
             return farmer;
         }
-
-        // READ - Get a farmer by username
+        //***************************************************************************************//
+        //Method for retrieving a farmer from the database using their username
         public Farmer GetFarmerByUsername(string username)
         {
             Farmer farmer = null;
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM Farmers WHERE FarmerUserName = @FarmerUserName";
+                string sql = "SELECT * FROM Farmers WHERE FarmerUserName = @FarmerUserName"; // SQL query for retrieving a farmer by username
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -101,15 +103,16 @@ namespace ST10263027_PROG7311_POE.Repository
 
             return farmer;
         }
-
-        // READ - Get a farmer by username and password (for authentication)
+        //***************************************************************************************//
+        //Method for reading the password and username of a farmer from the database when they login
+        //Debugging and corrections done by DeepSeek AI
         public Farmer GetFarmerByUsernameAndPassword(string username, string password)
         {
             Farmer farmer = null;
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM Farmers WHERE FarmerUserName = @FarmerUserName AND FarmerPassword = @FarmerPassword";
+                string sql = "SELECT * FROM Farmers WHERE FarmerUserName = @FarmerUserName AND FarmerPassword = @FarmerPassword"; // SQL query to select a farmer by username and password
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -135,13 +138,13 @@ namespace ST10263027_PROG7311_POE.Repository
 
             return farmer;
         }
-
-        // READ - Check if a farmer exists by username
+        //***************************************************************************************//
+        //Method for checking a farmer exists from the database using their username
         public bool FarmerExists(string username)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT COUNT(1) FROM Farmers WHERE FarmerUserName = @FarmerUserName";
+                string sql = "SELECT COUNT(1) FROM Farmers WHERE FarmerUserName = @FarmerUserName"; // SQL query to check if a farmer exists by username
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -151,8 +154,8 @@ namespace ST10263027_PROG7311_POE.Repository
                 }
             }
         }
-
-        // UPDATE - Update an existing farmer's information
+        //***************************************************************************************//
+        //Method for updating a farmer's details in the database
         public void UpdateFarmer(Farmer farmer)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -162,7 +165,7 @@ namespace ST10263027_PROG7311_POE.Repository
                     SET FarmerUserName = @FarmerUserName, 
                         FarmerPassword = @FarmerPassword, 
                         FarmerContactNum = @FarmerContactNum 
-                    WHERE FarmerId = @FarmerId";
+                    WHERE FarmerId = @FarmerId"; // SQL query to update a farmer's details
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -176,13 +179,13 @@ namespace ST10263027_PROG7311_POE.Repository
                 }
             }
         }
-
-        // DELETE - Delete a farmer by ID
+        //***************************************************************************************//
+        //Deleting a farmer from the database using the FarmerId
         public void DeleteFarmer(int farmerId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string sql = "DELETE FROM Farmers WHERE FarmerId = @FarmerId";
+                string sql = "DELETE FROM Farmers WHERE FarmerId = @FarmerId"; // SQL query to delete a farmer by ID
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -192,15 +195,16 @@ namespace ST10263027_PROG7311_POE.Repository
                 }
             }
         }
-
-        // READ - Get all farmers
+        //***************************************************************************************//
+        //Method to retrieve all the farmers from the database along with their related information such as contact number
+        //Debugging and corrections done by DeepSeek AI
         public List<Farmer> GetAllFarmers()
         {
             List<Farmer> farmers = new List<Farmer>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM Farmers";
+                string sql = "SELECT * FROM Farmers"; // SQL query to select all farmers
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -226,8 +230,11 @@ namespace ST10263027_PROG7311_POE.Repository
 
             return farmers;
         }
+        //***************************************************************************************//
+        //The below methods are used to manage the products of a farmer 
 
-        // PRODUCT METHODS
+        //This method handles the addition of a new product to the database submitted by a farmer
+        //Debugging and corrections done by DeepSeek AI
         public void AddProduct(Product product)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -237,7 +244,7 @@ namespace ST10263027_PROG7311_POE.Repository
                     INSERT INTO Products (ProductName, ProductCategory, ProductionDate, FarmerId)
                     VALUES (@ProductName, @ProductCategory, @ProductionDate, @FarmerId);
                     SELECT CAST(SCOPE_IDENTITY() AS int);
-                ";
+                ";  //SQL query to add a new product and retrieve its ID
 
                 command.Parameters.AddWithValue("@ProductName", product.ProductName ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@ProductCategory", product.ProductCategory ?? (object)DBNull.Value);
@@ -249,6 +256,8 @@ namespace ST10263027_PROG7311_POE.Repository
             }
         }
 
+        //This method retrieves all products from the database that are linked to a specific farmer so they only see their products
+        //Debugging and corrections done by DeepSeek AI
         public List<Product> GetProductsByFarmerId(int farmerId)
         {
             var products = new List<Product>();
@@ -259,7 +268,7 @@ namespace ST10263027_PROG7311_POE.Repository
                     SELECT ProductId, ProductName, ProductCategory, ProductionDate, FarmerId 
                     FROM Products 
                     WHERE FarmerId = @FarmerId
-                    ORDER BY ProductionDate DESC";
+                    ORDER BY ProductionDate DESC"; // SQL query to select products by FarmerId
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -287,3 +296,4 @@ namespace ST10263027_PROG7311_POE.Repository
         }
     }
 }
+//***********************************************End of file*****************************************//
