@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace ST10263027_PROG7311_POE.Services
 {
+    //This file contains the business logic for the employee controller and acting as an intermediary between the controller and repository
     public class EmployeeService
     {
         private readonly EmployeeRepository _employeeRepository;
@@ -188,3 +189,4 @@ namespace ST10263027_PROG7311_POE.Services
         }
     }
 }
+//***********************************************End of file*****************************************//

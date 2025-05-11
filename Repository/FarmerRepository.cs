@@ -9,8 +9,10 @@ namespace ST10263027_PROG7311_POE.Repository
     //This file handles all the create, read, update, delete (CRUD) operations for the managing a farmer and products
     public class FarmerRepository
     {
+        //Connection string to connect to the database
         private readonly string _connectionString;
-
+        
+        //Constructor that initializes the connection string
         public FarmerRepository(string connectionString)
         {
             _connectionString = connectionString;
@@ -26,7 +28,7 @@ namespace ST10263027_PROG7311_POE.Repository
                     INSERT INTO Farmers (FarmerUserName, FarmerPassword, FarmerContactNum)
                     VALUES (@FarmerUserName, @FarmerPassword, @FarmerContactNum);
                     SELECT CAST(SCOPE_IDENTITY() AS int); 
-                "; //This line retrieves the ID of the newly inserted farmer
+                "; //This query retrieves the ID of the newly inserted farmer
 
                 command.Parameters.AddWithValue("@FarmerUserName", farmer.FarmerUserName ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@FarmerPassword", farmer.FarmerPassword ?? (object)DBNull.Value);
