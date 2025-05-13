@@ -8,11 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Register your database context
+// Register database context
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register repositories with connection strings
+// Registering employee repository
 builder.Services.AddScoped<EmployeeRepository>(provider =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
@@ -20,6 +21,7 @@ builder.Services.AddScoped<EmployeeRepository>(provider =>
     return new EmployeeRepository(connStr);
 });
 
+// Registering farmer repository
 builder.Services.AddScoped<FarmerRepository>(provider =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
@@ -27,8 +29,9 @@ builder.Services.AddScoped<FarmerRepository>(provider =>
     return new FarmerRepository(connStr);
 });
 
-// Register your services
+//Registering Employee service
 builder.Services.AddScoped<EmployeeService>();
+//Registering Farmer service
 builder.Services.AddScoped<FarmerService>();
 
 // Configure session state
@@ -41,7 +44,7 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Add this after app.UseRouting();
+;
 app.UseSession();
 
 // Middleware pipeline
@@ -62,3 +65,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+//***********************************************End of file*****************************************//
+
