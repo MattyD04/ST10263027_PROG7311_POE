@@ -81,11 +81,12 @@ namespace ST10263027_PROG7311_POE.Controllers
         }
         //***************************************************************************************************//
 
-        // Logout functionality that just takes the user back to the home page
+        // Logout functionality that clears the session and returns the issue to the home page
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
     }
