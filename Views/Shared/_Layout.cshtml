@@ -12,8 +12,20 @@
             height: 100%;
             margin: 0;
         }
+
         body {
-            background: linear-gradient(to bottom, #1e90ff, #32cd32);
+            background-image: url('/Images/Farm Background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); 
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -30,32 +42,32 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (Context.Request.Path.StartsWithSegments("/Home/EmployeeDashboard"))
                         {
-                                    <li class="nav-item">
-                                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="EmployeeDashboard">Employee Dashboard</a>
-                                    </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="EmployeeDashboard">Employee Dashboard</a>
+                            </li>
                         }
                         else if (Context.Request.Path.StartsWithSegments("/Farmer/FarmerDashboard"))
                         {
-                                    <li class="nav-item">
-                                        <a class="nav-link text-white" asp-area="" asp-controller="Farmer" asp-action="FarmerDashboard">Farmer Dashboard</a>
-                                    </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Farmer" asp-action="FarmerDashboard">Farmer Dashboard</a>
+                            </li>
                         }
                         else
                         {
-                                    <li class="nav-item">
-                                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                                    </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
                         }
                     </ul>
                     @if (Context.Request.Path.StartsWithSegments("/Home/EmployeeDashboard") || Context.Request.Path.StartsWithSegments("/Farmer/FarmerDashboard"))
                     {
-                            <ul class="navbar-nav ms-auto">
-                                <li class="nav-item">
-                                    <form asp-controller="Home" asp-action="Logout" method="post">
-                                        <button type="submit" class="btn btn-link nav-link text-white">Logout</button>
-                                    </form>
-                                </li>
-                            </ul>
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <form asp-controller="Home" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-link nav-link text-white">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
                     }
                 </div>
             </div>
