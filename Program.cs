@@ -12,7 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register repositories with connection strings
+// Registering repositories with connection strings
 // Registering employee repository
 builder.Services.AddScoped<EmployeeRepository>(provider =>
 {

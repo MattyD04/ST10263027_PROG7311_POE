@@ -5,7 +5,7 @@
     var usernameError = ViewBag.UsernameError as string;
     var passwordError = ViewBag.PasswordError as string;
 }
-<!--DeepSeek AI helped to fix the error of the email and password validation rules not appearing in the log in form-->
+<!--DeepSeek AI helped to fix the error of the email and password validation rules and messages not appearing in the log in form-->
 <style>
     .login-container {
         max-width: 400px;
@@ -73,7 +73,6 @@
 <div class="login-container">
     <h2>Employee Login</h2>
 
-    @* Show general error message *@
     @if (!string.IsNullOrEmpty(errorMessage))
     {
         <div class="validation-message">@errorMessage</div>
