@@ -5,6 +5,7 @@
     as well as added the JS to help display the products along with the farmer details as I was having issues with that, and helped fix the issue
     of products not being filtered properly in the Results table
 -->
+
 <style>
     .border-right {
         border-right: 1px solid #dee2e6;
@@ -118,6 +119,26 @@
         max-width: 85%;
         margin: 0 auto 40px auto;
     }
+
+    /* New filter buttons styling */
+    .filter-buttons-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    #filterForm .btn-primary {
+        width: auto;
+        display: inline-block;
+        margin: 0;
+        padding: 10px 25px;
+    }
+
+    #filterForm .btn-outline-primary {
+        margin-left: 0;
+        padding: 10px 25px;
+    }
 </style>
 
 <div class="container-fluid">
@@ -223,9 +244,9 @@
                             </div>
                         </div>
 
-                        <div class="text-center">
+                        <div class="filter-buttons-container">
                             <button type="button" class="btn btn-primary">Apply Filters</button>
-                            <button type="button" class="btn btn-outline-primary ml-2">Reset</button>
+                            <button type="button" class="btn btn-outline-primary">Reset</button>
                         </div>
                     </form>
                 </div>
