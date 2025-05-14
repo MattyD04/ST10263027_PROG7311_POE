@@ -96,41 +96,8 @@ namespace ST10263027_PROG7311_POE.Repository
                 }
             }
         }
-        //***************************************************************************************//
-        //Method to retrieve all the farmers from the database along with their related information such as contact number
-        //Debugging and corrections done by DeepSeek AI
-        public List<Farmer> GetAllFarmers()
-        {
-            List<Farmer> farmers = new List<Farmer>();
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string sql = "SELECT * FROM Farmers"; // SQL query to select all farmers
-
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Farmer farmer = new Farmer
-                            {
-                                FarmerId = Convert.ToInt32(reader["FarmerId"]),
-                                FarmerUserName = reader["FarmerUserName"]?.ToString(),
-                                FarmerPassword = reader["FarmerPassword"]?.ToString(),
-                                FarmerContactNum = reader["FarmerContactNum"]?.ToString()
-                            };
-
-                            farmers.Add(farmer);
-                        }
-                    }
-                }
-            }
-
-            return farmers;
-        }
+        
+        
         //***************************************************************************************//
         //The below methods are used to manage the products of a farmer 
 
