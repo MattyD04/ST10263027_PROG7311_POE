@@ -95,6 +95,17 @@
         background-color: #d4edda;
         border-color: #c3e6cb;
     }
+
+    /* New styles for the modified layout */
+    .full-width-section {
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .form-section {
+        max-width: 85%;
+        margin: 0 auto 40px auto;
+    }
 </style>
 
 <div class="container-fluid">
@@ -104,76 +115,78 @@
         </div>
     </div>
 
+    <!-- Product Submission Form Section -->
     <div class="row">
-        <!-- Left Side - Product Submission -->
-        <div class="col-md-6 border-right">
-            <div style="max-width: 85%; margin-bottom: 20px;">
+        <div class="col-12">
+            <div class="form-section">
                 <h2 class="mb-4 text-center">Product Submission</h2>
-            </div>
-            <div class="card" style="max-width: 85%; margin-left: 0;">
-                <div class="card-header">
-                    <h4>Product Information Form</h4>
-                </div>
-                <div class="card-body">
-                    <!-- Display success message -->
-                    @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="alert alert-success">
-                            @TempData["SuccessMessage"]
-                        </div>
-                    }
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Product Information Form</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Display success message -->
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success">
+                                @TempData["SuccessMessage"]
+                            </div>
+                        }
 
-                    <!-- Display error message -->
-                    @if (ViewBag.ProductError != null)
-                    {
-                        <div class="alert alert-danger">
-                            @ViewBag.ProductError
-                            <div asp-validation-summary="All" class="text-danger"></div>
-                        </div>
-                    }
+                        <!-- Display error message -->
+                        @if (ViewBag.ProductError != null)
+                        {
+                            <div class="alert alert-danger">
+                                @ViewBag.ProductError
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                            </div>
+                        }
 
-                    <form asp-action="AddProduct" asp-controller="Farmer" method="post">
-                        @Html.AntiForgeryToken()
+                        <form asp-action="AddProduct" asp-controller="Farmer" method="post">
+                            @Html.AntiForgeryToken()
 
-                        <div class="form-group">
-                            <label for="ProductName">Product Name</label>
-                            <input type="text" class="form-control" id="ProductName" name="ProductName" placeholder="Enter product name" required />
-                        </div>
+                            <div class="form-group">
+                                <label for="ProductName">Product Name</label>
+                                <input type="text" class="form-control" id="ProductName" name="ProductName" placeholder="Enter product name" required />
+                            </div>
 
-                        <div class="form-group">
-                            <label for="ProductCategory">Product Category</label>
-                            <select class="form-control" id="ProductCategory" name="ProductCategory" required>
-                                <option value="">Select Category</option>
-                                <option value="Vegetables">Vegetables</option>
-                                <option value="Fruits">Fruits</option>
-                                <option value="Dairy">Dairy</option>
-                                <option value="Grains">Grains</option>
-                                <option value="Livestock">Livestock</option>
-                                <option value="Poultry">Poultry</option>
-                                <option value="Organic">Organic</option>
-                            </select>
-                        </div>
+                            <div class="form-group">
+                                <label for="ProductCategory">Product Category</label>
+                                <select class="form-control" id="ProductCategory" name="ProductCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Vegetables">Vegetables</option>
+                                    <option value="Fruits">Fruits</option>
+                                    <option value="Dairy">Dairy</option>
+                                    <option value="Grains">Grains</option>
+                                    <option value="Livestock">Livestock</option>
+                                    <option value="Poultry">Poultry</option>
+                                    <option value="Organic">Organic</option>
+                                </select>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="ProductionDate">Production Date</label>
-                            <input type="date" class="form-control" id="ProductionDate" name="ProductionDate" required />
-                        </div>
+                            <div class="form-group">
+                                <label for="ProductionDate">Production Date</label>
+                                <input type="date" class="form-control" id="ProductionDate" name="ProductionDate" required />
+                            </div>
 
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary">Submit Product</button>
-                        </div>
-                    </form>
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-primary">Submit Product</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Right Side - My Products -->
-        <div class="col-md-6">
-            <div style="max-width: 95%; margin-bottom: 20px;">
+    <!-- My Products Section -->
+    <div class="row">
+        <div class="col-12 full-width-section">
+            <div style="margin-bottom: 20px;">
                 <h2 class="mb-4 text-center">My Products</h2>
             </div>
 
-            <div class="card" style="max-width: 95%;">
+            <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4>Product List</h4>
                     <span class="badge badge-info">@(Model != null ? Model.Count : 0) Results</span>
