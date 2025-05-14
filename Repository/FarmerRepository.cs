@@ -17,94 +17,7 @@ namespace ST10263027_PROG7311_POE.Repository
         {
             _connectionString = connectionString;
         }
-        //***************************************************************************************//
-        //This method is used to add a new farmer to the database
-        public void AddFarmer(Farmer farmer)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                command.CommandText = @"
-                    INSERT INTO Farmers (FarmerUserName, FarmerPassword, FarmerContactNum)
-                    VALUES (@FarmerUserName, @FarmerPassword, @FarmerContactNum);
-                    SELECT CAST(SCOPE_IDENTITY() AS int); 
-                "; //This query retrieves the ID of the newly inserted farmer
-
-                command.Parameters.AddWithValue("@FarmerUserName", farmer.FarmerUserName ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@FarmerPassword", farmer.FarmerPassword ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@FarmerContactNum", farmer.FarmerContactNum ?? (object)DBNull.Value);
-
-                connection.Open();
-                farmer.FarmerId = (int)command.ExecuteScalar();
-            }
-        }
-        //***************************************************************************************//
-        //This method handles the retrieval of a farmer from the database using FarmerId in the farmer table
-        //Debugging and corrections done by DeepSeek AI
-        public Farmer GetFarmerById(int farmerId)
-        {
-            Farmer farmer = null;
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string sql = "SELECT * FROM Farmers WHERE FarmerId = @FarmerId"; // SQL query to select a farmer by ID
-
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@FarmerId", farmerId);
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            farmer = new Farmer
-                            {
-                                FarmerId = Convert.ToInt32(reader["FarmerId"]),
-                                FarmerUserName = reader["FarmerUserName"]?.ToString(),
-                                FarmerPassword = reader["FarmerPassword"]?.ToString(),
-                                FarmerContactNum = reader["FarmerContactNum"]?.ToString()
-                            };
-                        }
-                    }
-                }
-            }
-
-            return farmer;
-        }
-        //***************************************************************************************//
-        //Method for retrieving a farmer from the database using their username
-        public Farmer GetFarmerByUsername(string username)
-        {
-            Farmer farmer = null;
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string sql = "SELECT * FROM Farmers WHERE FarmerUserName = @FarmerUserName"; // SQL query for retrieving a farmer by username
-
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@FarmerUserName", username ?? (object)DBNull.Value);
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            farmer = new Farmer
-                            {
-                                FarmerId = Convert.ToInt32(reader["FarmerId"]),
-                                FarmerUserName = reader["FarmerUserName"]?.ToString(),
-                                FarmerPassword = reader["FarmerPassword"]?.ToString(),
-                                FarmerContactNum = reader["FarmerContactNum"]?.ToString()
-                            };
-                        }
-                    }
-                }
-            }
-
-            return farmer;
-        }
+        
         //***************************************************************************************//
         //Method for reading the password and username of a farmer from the database when they login
         //Debugging and corrections done by DeepSeek AI
@@ -140,22 +53,8 @@ namespace ST10263027_PROG7311_POE.Repository
 
             return farmer;
         }
-        //***************************************************************************************//
-        //Method for checking a farmer exists from the database using their username
-        public bool FarmerExists(string username)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string sql = "SELECT COUNT(1) FROM Farmers WHERE FarmerUserName = @FarmerUserName"; // SQL query to check if a farmer exists by username
-
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@FarmerUserName", username ?? (object)DBNull.Value);
-                    connection.Open();
-                    return (int)command.ExecuteScalar() > 0;
-                }
-            }
-        }
+        
+      
         //***************************************************************************************//
         //Method for updating a farmer's details in the database
         public void UpdateFarmer(Farmer farmer)
